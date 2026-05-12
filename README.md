@@ -2,20 +2,7 @@
 
 SpendLens is a free web tool that audits a startup's AI tool spend in under 2 minutes, showing exactly where the team is overpaying, what to switch or downgrade, and how much they could save — no login required. It's a lead-generation asset for [Credex](https://credex.rocks), which sells discounted AI infrastructure credits.
 
-**Live demo:** [https://spendlens.vercel.app](https://spendlens.vercel.app)
-
----
-
-## Screenshots
-
-> _Add 3+ screenshots or a Loom/YouTube link here before submitting_
-
-<!-- 
-![Landing page](./docs/screenshot-home.png)
-![Audit results](./docs/screenshot-results.png)
-![Lead capture](./docs/screenshot-lead.png)
--->
-
+**Live demo:** 
 ---
 
 ## Quick Start
