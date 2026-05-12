@@ -235,12 +235,12 @@ function auditGemini(entry: ToolEntry): Recommendation[] {
   // Advanced is bundled with Google One 2TB — if they don't use storage, it's priced oddly
   if (entry.planId === "advanced" && entry.seats > 1) {
     recs.push({
-      type: "review",
+      type: "optimal",
       action: "Verify Google One storage is being used",
       reason: `Gemini Advanced ($19.99/seat) bundles 2TB Google storage per user. If your team isn't using the storage, you're paying a ~$10/seat premium vs pure-AI alternatives like Claude Pro ($20/seat) or ChatGPT Plus ($20/seat).`,
-      monthlySavings: 0, // context-dependent
+      monthlySavings: 0,
       annualSavings: 0,
-    } as Recommendation);
+    });
   }
 
   return recs;
@@ -275,7 +275,7 @@ function auditApiUsage(entry: ToolEntry, monthlySpend: number): Recommendation[]
       type: "use_credits",
       action: "Explore Credex for discounted API credits",
       reason: `At $${monthlySpend}/mo in API spend, discounted credits through Credex could meaningfully reduce your per-token cost — the savings compound quickly at scale.`,
-      monthlySavings: Math.round(monthlySpend * 0.15), // conservative 15% discount estimate
+      monthlySavings: Math.round(monthlySpend * 0.15),
       annualSavings: Math.round(monthlySpend * 0.15 * 12),
     });
   }
@@ -297,7 +297,6 @@ function detectRedundancies(tools: ToolEntry[]): string[] {
   const hasAnthropicApi = toolIds.includes("anthropic_api");
   const hasOpenAiApi = toolIds.includes("openai_api");
 
-  // Two coding assistants
   if (hasCursor && hasCopilot) {
     msgs.push(
       "You're paying for both Cursor and GitHub Copilot — both are code-completion tools. Most developers use one exclusively. Pick the one your team prefers and cancel the other."
@@ -314,7 +313,6 @@ function detectRedundancies(tools: ToolEntry[]): string[] {
     );
   }
 
-  // Chat + API overlap
   if (hasClaude && hasAnthropicApi) {
     msgs.push(
       "You're paying for both Claude subscriptions and Anthropic API. If your team uses Claude.ai for conversational work, ensure the API is only used for production integrations — not as a duplicate chat interface."
@@ -326,7 +324,6 @@ function detectRedundancies(tools: ToolEntry[]): string[] {
     );
   }
 
-  // Two general-purpose chat tools
   if (hasClaude && hasChatGPT) {
     const claudeEntry = tools.find((t) => t.toolId === "claude");
     const chatgptEntry = tools.find((t) => t.toolId === "chatgpt");
@@ -382,7 +379,6 @@ export function runAudit(input: AuditInput): AuditResult {
         break;
     }
 
-    // Filter out recs where savings > current spend (sanity check)
     recs = recs.filter((r) => r.monthlySavings <= currentSpend);
 
     const toolMonthlySavings = recs.reduce((sum, r) => sum + r.monthlySavings, 0);
